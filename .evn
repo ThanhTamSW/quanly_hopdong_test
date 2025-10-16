@@ -1,0 +1,99 @@
+env
+# Server
+PORT=5000
+NODE_ENV=development
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/contract_management
+# Hoặc dùng MongoDB Atlas:
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/contract_management
+
+# JWT
+JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+JWT_EXPIRE=7d
+
+# Frontend URL (cho CORS)
+FRONTEND_URL=http://localhost:5173
+
+# Email (Optional - cho gửi thông báo)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+EMAIL_FROM=noreply@contractmanagement.com
+
+# File Upload
+MAX_FILE_SIZE=10485760
+ALLOWED_FILE_TYPES=.pdf,.doc,.docx,.jpg,.png
+```
+
+## 📊 Database Schema
+
+### User (Người dùng)
+- email, password, fullName, role, avatar, phone, status, lastLogin
+
+### Contract (Hợp đồng)
+- contractNumber, title, partner, value, signDate, startDate, endDate, status, attachments, createdBy, notes, history
+
+### Partner (Đối tác)
+- name, code, type, contactPerson, email, phone, address, taxCode, status
+
+### Notification (Thông báo)
+- user, type, title, message, contract, isRead, createdAt
+
+## 🔗 API Endpoints Overview
+
+### Authentication
+- POST `/api/auth/register` - Đăng ký
+- POST `/api/auth/login` - Đăng nhập
+- POST `/api/auth/logout` - Đăng xuất
+- GET `/api/auth/me` - Lấy thông tin user hiện tại
+- PUT `/api/auth/update-profile` - Cập nhật profile
+- PUT `/api/auth/change-password` - Đổi mật khẩu
+
+### Contracts
+- GET `/api/contracts` - Lấy danh sách hợp đồng (có phân trang, tìm kiếm, lọc)
+- GET `/api/contracts/:id` - Chi tiết hợp đồng
+- POST `/api/contracts` - Tạo hợp đồng mới
+- PUT `/api/contracts/:id` - Cập nhật hợp đồng
+- DELETE `/api/contracts/:id` - Xóa hợp đồng
+- GET `/api/contracts/expiring` - Hợp đồng sắp hết hạn
+
+### Partners
+- GET `/api/partners` - Danh sách đối tác
+- GET `/api/partners/:id` - Chi tiết đối tác
+- POST `/api/partners` - Tạo đối tác
+- PUT `/api/partners/:id` - Cập nhật đối tác
+- DELETE `/api/partners/:id` - Xóa đối tác
+
+### Users (Admin only)
+- GET `/api/users` - Danh sách người dùng
+- GET `/api/users/:id` - Chi tiết người dùng
+- PUT `/api/users/:id` - Cập nhật người dùng
+- DELETE `/api/users/:id` - Xóa người dùng
+- PUT `/api/users/:id/status` - Thay đổi trạng thái user
+
+### Dashboard
+- GET `/api/dashboard/stats` - Thống kê tổng quan
+- GET `/api/dashboard/charts` - Dữ liệu biểu đồ
+- GET `/api/dashboard/recent-contracts` - Hợp đồng gần đây
+
+### Upload
+- POST `/api/upload` - Upload file
+- DELETE `/api/upload/:filename` - Xóa file
+
+## 🎯 Các tính năng chính
+
+✅ Authentication & Authorization (JWT)
+✅ Role-based Access Control (Admin, Manager, User)
+✅ CRUD đầy đủ cho Hợp đồng, Đối tác, User
+✅ Upload file hợp đồng (PDF, DOC, images)
+✅ Tìm kiếm & Filter nâng cao
+✅ Phân trang (Pagination)
+✅ Thống kê Dashboard
+✅ Thông báo hợp đồng sắp hết hạn
+✅ Lịch sử thay đổi hợp đồng
+✅ Validation input
+✅ Error handling tập trung
+✅ Security (Helmet, CORS)
+✅ Logging (Morgan)
