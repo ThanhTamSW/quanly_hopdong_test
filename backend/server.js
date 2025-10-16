@@ -6,6 +6,7 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
+app.use("/api/schedules", require("./src/routes/scheduleRoutes"));
 
 // Middleware
 app.use(cors());
