@@ -1,4 +1,6 @@
-// src/app.js - Cấu hình Express app
+// ============================================
+// FILE 5: backend/src/app.js
+// ============================================
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -15,6 +17,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const trainerRoutes = require('./routes/trainerRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
+const importRoutes = require('./routes/importRoutes');
 
 // Import middleware
 const errorHandler = require('./middlewares/errorHandler');
@@ -44,7 +47,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined'));
 }
 
-// Static files (cho file upload)
+// Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health check endpoint
@@ -63,6 +66,9 @@ app.use('/api/partners', partnerRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/trainers', trainerRoutes);
+app.use('/api/schedules', scheduleRoutes);
+app.use('/api/import', importRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

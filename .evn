@@ -2,6 +2,7 @@ env
 # Server
 PORT=5000
 NODE_ENV=development
+VITE_API_URL=http://localhost:5000/api
 
 # Database
 MONGODB_URI=mongodb://localhost:27017/contract_management

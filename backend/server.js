@@ -1,33 +1,34 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
+/ FILE 4: backend/server.js
+// ============================================
+const app = require('./src/app');
+const connectDB = require('./src/config/database');
+require('dotenv').config();
 
-dotenv.config();
+const PORT = process.env.PORT || 5000;
 
-const app = express();
-app.use("/api/schedules", require("./src/routes/scheduleRoutes"));
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB connected successfully"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
-
-// Simple route
-app.get("/", (req, res) => {
-  res.send("Server is running ✅");
-});
+// Kết nối database
+connectDB();
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server đang chạy trên port ${PORT}`);
+  console.log(`📝 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🔗 API URL: http://localhost:${PORT}/api`);
+});
+
+// Xử lý unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('❌ UNHANDLED REJECTION! Shutting down...');
+  console.error(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
+// Xử lý SIGTERM
+process.on('SIGTERM', () => {
+  console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
+  server.close(() => {
+    console.log('💥 Process terminated!');
+  });
 });

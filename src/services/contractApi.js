@@ -49,7 +49,15 @@ export const contractApi = {
     return response.data;
   },
 
-  // Xóa file đính kèm
+  // Xóa file đính kèmexport const contractApi = {
+  getContracts: async (params) => { ... },
+  getContract: async (id) => { ... },
+  createContract: async (data) => { ... },
+  updateContract: async (id, data) => { ... },
+  deleteContract: async (id) => { ... },
+  getExpiringContracts: async () => { ... },
+  addAttachment: async (id, file) => { ... }
+};
   removeAttachment: async (contractId, attachmentId) => {
     const response = await api.delete(`/contracts/${contractId}/attachments/${attachmentId}`);
     return response.data;
