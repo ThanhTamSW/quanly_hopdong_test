@@ -1,30 +1,45 @@
-// src/routes/trainerRoutes.js - Routes cho huấn luyện viên
+// src/routes/trainerRoutes.js - Trainer routes
 const express = require('express');
 const router = express.Router();
-const {
-  getTrainers,
-  getMyTrainerProfile,
-  getTrainer,
-  createTrainer,
-  updateTrainer,
-  deleteTrainer
-} = require('../controllers/trainerController');
-const { protect, authorize } = require('../middlewares/auth');
+const { protect } = require('../middlewares/auth');
 
-// Tất cả routes cần authentication
+// All routes need authentication
 router.use(protect);
 
-// Route lấy thông tin trainer hiện tại
-router.get('/me', getMyTrainerProfile);
+// Basic CRUD routes
+router.get('/', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'Trainer routes - GET /api/trainers'
+  });
+});
 
-// Public trainer routes
-router.route('/')
-  .get(getTrainers)
-  .post(authorize('admin'), createTrainer);
+router.get('/:id', (req, res) => {
+  res.json({
+    status: 'success',
+    message: `Get trainer ${req.params.id}`
+  });
+});
 
-router.route('/:id')
-  .get(getTrainer)
-  .put(updateTrainer) // Trainer có thể update chính mình, admin có thể update tất cả
-  .delete(authorize('admin'), deleteTrainer);
+router.post('/', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'Create trainer'
+  });
+});
+
+router.put('/:id', (req, res) => {
+  res.json({
+    status: 'success',
+    message: `Update trainer ${req.params.id}`
+  });
+});
+
+router.delete('/:id', (req, res) => {
+  res.json({
+    status: 'success',
+    message: `Delete trainer ${req.params.id}`
+  });
+});
 
 module.exports = router;

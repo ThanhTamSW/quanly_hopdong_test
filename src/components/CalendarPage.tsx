@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
+import { AdvancedSearch } from "@/components/AdvancedSearch";
+import { SearchFilters } from "@/types";
 
 const sessions = [
   {
@@ -65,6 +67,7 @@ const sessions = [
 
 export function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 9, 9)); // Oct 9, 2025
+  const [searchFilters, setSearchFilters] = useState<any>({});
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -115,8 +118,17 @@ export function CalendarPage() {
   // Get today's sessions
   const todaySessions = sessions.filter((s) => s.date === "2025-10-09");
 
+  const handleSearch = (filters: SearchFilters) => {
+    setSearchFilters(filters);
+    // Apply filters to sessions
+    console.log('Search filters applied:', filters);
+  };
+
   return (
     <div className="space-y-6">
+      {/* Advanced Search */}
+      <AdvancedSearch onSearch={handleSearch} searchType="schedules" />
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar */}
         <Card className="lg:col-span-2">

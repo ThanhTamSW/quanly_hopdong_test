@@ -71,8 +71,7 @@ const trainerSchema = new mongoose.Schema({
 });
 
 // Indexes
-trainerSchema.index({ code: 1 });
-trainerSchema.index({ user: 1 });
+// code and user already have unique: true, no need for additional indexes
 trainerSchema.index({ status: 1 });
 trainerSchema.index({ 'specialties': 1 });
 

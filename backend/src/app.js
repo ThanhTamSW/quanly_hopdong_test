@@ -18,6 +18,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const trainerRoutes = require('./routes/trainerRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 const importRoutes = require('./routes/importRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 
 // Import middleware
 const errorHandler = require('./middlewares/errorHandler');
@@ -69,6 +70,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/trainers', trainerRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/import', importRoutes);
+app.use('/api/search', searchRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

@@ -421,26 +421,21 @@ const seedData = async () => {
 
     // Lịch hôm nay
     const schedule1 = await Schedule.create({
-      scheduleCode: await Schedule.generateCode(),
       trainer: trainer1._id,
-      title: 'Lớp Yoga buổi sáng',
-      subject: 'Yoga',
+      clientName: 'Nguyễn Thị A',
+      clientPhone: '0901111111',
       date: today,
       startTime: '08:00',
       endTime: '09:30',
+      duration: 90,
       location: 'Phòng Yoga 1',
-      maxStudents: 20,
-      description: 'Lớp Yoga cơ bản cho người mới bắt đầu',
-      students: [
-        { name: 'Nguyễn Thị A', email: 'a@example.com', phone: '0901111111' },
-        { name: 'Trần Văn B', email: 'b@example.com', phone: '0902222222' }
-      ],
+      notes: 'Lớp Yoga cơ bản cho người mới bắt đầu',
       status: 'scheduled',
       createdBy: admin._id
     });
 
     const schedule2 = await Schedule.create({
-      scheduleCode: await Schedule.generateCode(),
+      scheduleCode: `SCH${Date.now()}`,
       trainer: trainer1._id,
       title: 'Lớp Yoga buổi chiều',
       subject: 'Yoga',
@@ -455,7 +450,7 @@ const seedData = async () => {
     });
 
     const schedule3 = await Schedule.create({
-      scheduleCode: await Schedule.generateCode(),
+      scheduleCode: `SCH${Date.now()}`,
       trainer: trainer2._id,
       title: 'Lớp Gym buổi sáng',
       subject: 'Gym',
@@ -474,7 +469,7 @@ const seedData = async () => {
 
     // Lịch ngày mai
     await Schedule.create({
-      scheduleCode: await Schedule.generateCode(),
+      scheduleCode: `SCH${Date.now()}`,
       trainer: trainer1._id,
       title: 'Lớp Yoga buổi sáng',
       subject: 'Yoga',
@@ -488,7 +483,7 @@ const seedData = async () => {
     });
 
     await Schedule.create({
-      scheduleCode: await Schedule.generateCode(),
+      scheduleCode: `SCH${Date.now()}`,
       trainer: trainer2._id,
       title: 'Personal Training',
       subject: 'Personal Training',

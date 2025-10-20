@@ -2,7 +2,7 @@
 const Schedule = require('../models/Schedule');
 const Trainer = require('../models/Trainer');
 
-// @desc      Lấy danh sách lịch dạy
+// @desc      Lấy danh sách lịch dạy với advanced search và filters
 // @route     GET /api/schedules
 // @access    Private
 exports.getSchedules = async (req, res) => {
@@ -16,15 +16,110 @@ exports.getSchedules = async (req, res) => {
       endDate,
       status,
       sortBy = 'date',
-      order = 'asc'
+      order = 'asc',
+      // Advanced search parameters
+      search,
+      searchFields,
+      // Advanced filters
+      trainerName,
+      trainerSpecialties,
+      timeSlot,
+      duration,
+      location,
+      clientName,
+      // Date range filters
+      dateRange,
+      // Status filters
+      statusArray,
+      // Sorting options
+      sortFields
     } = req.query;
 
     const query = {};
 
+    // Basic filters
     if (trainer) query.trainer = trainer;
     if (status) query.status = status;
 
-    // Filter by date
+    // Advanced search with text search
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      const searchFieldsArray = searchFields ? searchFields.split(',') : ['notes', 'location'];
+      
+      const searchConditions = searchFieldsArray.map(field => ({
+        [field]: searchRegex
+      }));
+      
+      query.$or = searchConditions;
+    }
+
+    // Advanced filters
+    if (trainerName) {
+      query['trainer.user.fullName'] = new RegExp(trainerName, 'i');
+    }
+
+    if (trainerSpecialties) {
+      const specialties = trainerSpecialties.split(',');
+      query['trainer.specialties'] = { $in: specialties };
+    }
+
+    if (timeSlot) {
+      const [startTime, endTime] = timeSlot.split('-');
+      query.startTime = {
+        $gte: startTime,
+        $lte: endTime
+      };
+    }
+
+    if (duration) {
+      query.duration = parseInt(duration);
+    }
+
+    if (location) {
+      query.location = new RegExp(location, 'i');
+    }
+
+    if (clientName) {
+      query.clientName = new RegExp(clientName, 'i');
+    }
+
+    // Status array filter
+    if (statusArray) {
+      const statuses = statusArray.split(',');
+      query.status = { $in: statuses };
+    }
+
+    // Date range filters
+    if (dateRange) {
+      const ranges = {
+        'today': {
+          $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          $lt: new Date(new Date().setHours(23, 59, 59, 999))
+        },
+        'tomorrow': {
+          $gte: new Date(new Date().setDate(new Date().getDate() + 1)),
+          $lt: new Date(new Date().setDate(new Date().getDate() + 2))
+        },
+        'this_week': {
+          $gte: new Date(new Date().setDate(new Date().getDate() - new Date().getDay())),
+          $lt: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 7))
+        },
+        'next_week': {
+          $gte: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 7)),
+          $lt: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 14))
+        },
+        'this_month': {
+          $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
+        }
+      };
+      
+      if (ranges[dateRange]) {
+        query.date = ranges[dateRange];
+      }
+    }
+
+    // Filter by date (existing logic)
     if (date) {
       const selectedDate = new Date(date);
       query.date = {
@@ -39,7 +134,19 @@ exports.getSchedules = async (req, res) => {
 
     const skip = (page - 1) * limit;
     const sortOrder = order === 'desc' ? -1 : 1;
-    const sortObj = { [sortBy]: sortOrder };
+    
+    // Advanced sorting
+    let sortObj = {};
+    if (sortFields) {
+      const fields = sortFields.split(',');
+      const orders = order.split(',');
+      fields.forEach((field, index) => {
+        const fieldOrder = orders[index] === 'desc' ? -1 : 1;
+        sortObj[field] = fieldOrder;
+      });
+    } else {
+      sortObj = { [sortBy]: sortOrder };
+    }
 
     const schedules = await Schedule.find(query)
       .populate('trainer', 'code user')

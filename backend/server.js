@@ -1,4 +1,5 @@
-/ FILE 4: backend/server.js
+// ============================================
+// FILE: backend/server.js
 // ============================================
 const app = require('./src/app');
 const connectDB = require('./src/config/database');
